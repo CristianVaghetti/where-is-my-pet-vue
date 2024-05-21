@@ -174,7 +174,7 @@ provide('paginationData', paginationData)
             :key="index"
           >
             <td>{{ shelter.name }}</td>
-            <td>{{ shelter.city_id }}</td>
+            <td>{{ shelter.city?.name }}</td>
             <td>{{ shelter.address }}</td>
             <td style="width: 1%; white-space: nowrap;">
               <VBtn
