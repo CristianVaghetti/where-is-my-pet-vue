@@ -1,7 +1,14 @@
 export const maskUpper = reactive({
   mask: 'Z',
   tokens: {
-    Z: { pattern: /[\W\w]/, transform: chr => chr.toUpperCase(), repeated: true },
+    Z: { pattern: /[\W\w\s]/, transform: chr => chr.toUpperCase(), repeated: true },
+  },
+})
+
+export const maskNumber = reactive({
+  mask: 'Z',
+  tokens: {
+    Z: { pattern: /[0-9\s]/, repeated: true },
   },
 })
 
@@ -15,4 +22,8 @@ export const maskMoney = reactive({
 
 export const maskPhone = reactive({
   mask: '(##) # ####-####',
+})
+
+export const maskCEP = reactive({
+  mask: '#####-###',
 })
