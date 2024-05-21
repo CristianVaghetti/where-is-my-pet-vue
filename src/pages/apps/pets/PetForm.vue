@@ -25,6 +25,7 @@ const emit = defineEmits([
 ])
 
 const refForm = ref()
+const isLoading = ref(true)
 const cities = ref([])
 const states = ref([])
 
@@ -36,6 +37,8 @@ const resetEvent = () => {
   nextTick(() => {
     refForm.value?.resetValidation()
   })
+
+  isLoading.value = true
 }
 
 watch(() => props.isDrawerOpen, resetEvent)
@@ -83,8 +86,13 @@ watch(() => form.value.zip_code, () => {
         return
       }
 
-      form.value.address = res.data.logradouro
-      form.value.district = res.data.bairro
+      if (!isLoading.value) {
+        form.value.address = res.data.logradouro
+        form.value.district = res.data.bairro
+      }
+      
+      isLoading.value = false
+      
       form.value.state_id = res.data.uf
 
       setTimeout(() => {

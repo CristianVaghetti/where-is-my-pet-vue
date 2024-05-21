@@ -1,12 +1,12 @@
 <script setup>
 import { maskUpper } from '@/plugins/masks'
-import { useShelterStore } from '../../../views/apps/shelters/useShelterStore'
-import ShelterForm from './ShelterForm.vue'
+import { usePetStore } from '../../../views/apps/pets/usePetStore'
+import PetForm from './PetForm.vue'
 
 const title = ref('Abrigos')
-const shelters = ref([])
-const store = useShelterStore()
-const isAddShelterDrawerVisible = ref(false)
+const pets = ref([])
+const store = usePetStore()
+const isAddPetDrawerVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
 
@@ -22,17 +22,17 @@ const form = ref({})
 const rowPerPage = ref(5)
 const currentPage = ref(1)
 const totalPage = ref(1)
-const totalShelters = ref(0)
+const totalPets = ref(0)
 
 onMounted(() => {
   fetch()
 })
 
 const paginationData = computed(() => {
-  const firstIndex = shelters.value.length ? (currentPage.value - 1) * rowPerPage.value + 1 : 0
-  const lastIndex = shelters.value.length + (currentPage.value - 1) * rowPerPage.value
+  const firstIndex = pets.value.length ? (currentPage.value - 1) * rowPerPage.value + 1 : 0
+  const lastIndex = pets.value.length + (currentPage.value - 1) * rowPerPage.value
   
-  return `${ firstIndex }-${ lastIndex } de ${ totalShelters.value }`
+  return `${ firstIndex }-${ lastIndex } de ${ totalPets.value }`
 })
 
 const fetch = () => {
@@ -42,21 +42,21 @@ const fetch = () => {
     ...filters.value,
   }
 
-  store.fetchShelters(params).then(res => {
-    shelters.value = res.data.data.shelters.items
-    totalShelters.value = res.data.data.shelters.total
-    totalPage.value =  Math.ceil(res.data.data.shelters.total / rowPerPage.value)
+  store.fetchPets(params).then(res => {
+    pets.value = res.data.data.pets.items
+    totalPets.value = res.data.data.pets.total
+    totalPage.value =  Math.ceil(res.data.data.pets.total / rowPerPage.value)
   })
 }
 
 const add = e => {
-  store.addShelter(e).then(res => {
+  store.addPet(e).then(res => {
     fetch()
   })
 }
 
 const edit = e => {
-  store.editShelter(e).then(res => {
+  store.editPet(e).then(res => {
     fetch()
   })
 }
@@ -64,7 +64,7 @@ const edit = e => {
 const destroy = e => {
   let id = Number.isInteger(e) ? e : idToDestroy.value
 
-  store.removeShelter(id).then(res => {
+  store.removePet(id).then(res => {
     fetch()
   })
 }
@@ -76,7 +76,7 @@ const confirmation = id => {
 
 const showDrawer = e => {
   form.value = { ...e }
-  isAddShelterDrawerVisible.value= true
+  isAddPetDrawerVisible.value= true
 }
 
 let timer
@@ -152,13 +152,13 @@ provide('paginationData', paginationData)
         <thead>
           <tr>
             <th class="text-left">
-              Nome
+              ID
             </th>
             <th class="text-left">
               Cidade
             </th>
             <th class="text-left">
-              Rua
+              Abrigo
             </th>
             <th class="text-left">
               Ações
@@ -167,19 +167,19 @@ provide('paginationData', paginationData)
         </thead>
         <tbody>
           <tr 
-            v-for="(shelter, index) in shelters"
+            v-for="(pet, index) in pets"
             :key="index"
           >
-            <td>{{ shelter.name }}</td>
-            <td>{{ shelter.city?.name }}</td>
-            <td>{{ shelter.address }}</td>
+            <td>{{ pet.id }}</td>
+            <td>{{ pet.city?.name }}</td>
+            <td>{{ pet.shelter?.name }}</td>
             <td style="width: 1%; white-space: nowrap;">
               <VBtn
                 color="#0000ff"
                 title="Editar"
                 variant="text"
                 icon="mdi-square-edit-outline"
-                @click="showDrawer(shelter)"
+                @click="showDrawer(pet)"
               />
 
               <VBtn
@@ -187,12 +187,12 @@ provide('paginationData', paginationData)
                 title="Excluir"
                 variant="text"
                 icon="mdi-delete-outline"
-                @click="confirmation(shelter.id)"
+                @click="confirmation(pet.id)"
               />
             </td>
           </tr>
         </tbody>
-        <tfoot v-show="!shelters.length">
+        <tfoot v-show="!pets.length">
           <tr>
             <td
               colspan="7"
@@ -208,12 +208,12 @@ provide('paginationData', paginationData)
       />
     </VCard>
 
-    <ShelterForm
-      v-model:isDrawerOpen="isAddShelterDrawerVisible"
+    <PetForm
+      v-model:isDrawerOpen="isAddPetDrawerVisible"
       :form="{ ...form }"
-      @update-shelter="edit"
-      @add-shelter="add"
-      @remove-shelter="destroy"
+      @update-pet="edit"
+      @add-pet="add"
+      @remove-pet="destroy"
     />
 
     <ConfirmDialog
