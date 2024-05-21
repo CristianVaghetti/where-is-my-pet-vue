@@ -49,10 +49,10 @@ const globalThemeBackground = computed(() => global.current.value.colors.backgro
 
         <VSpacer />
 
-        <NavBarI18n />
+        <!-- <NavBarI18n /> -->
         <NavbarThemeSwitcher />
-        <NavbarShortcuts />
-        <NavBarNotifications class="me-2" />
+        <!-- <NavbarShortcuts /> -->
+        <!-- <NavBarNotifications class="me-2" /> -->
         <UserProfile />
       </div>
     </template>

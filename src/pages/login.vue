@@ -38,10 +38,9 @@ const login = () => {
     localStorage.setItem('accessToken', JSON.stringify(token))
 
     // Redirect to `to` query if exist or redirect to index route
-    router.replace(route.query.to ? String(route.query.to) : '/')
+    router.replace(route.query.to ? String(route.query.to) : '/home')
   }).catch(e => {
-    errors.value.email = e.response ? e.response.data.msg : 'Deu ruim!'
-    console.error(e.response.data)
+    errors.value.email = e.response?.data?.msg || 'Deu ruim!'
   })
 }
 

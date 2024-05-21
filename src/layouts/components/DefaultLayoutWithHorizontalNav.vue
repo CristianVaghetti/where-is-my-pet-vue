@@ -37,10 +37,10 @@ const { appRouteTransition } = useThemeConfig()
 
       <NavSearchBar trigger-btn-class="ms-lg-n3" />
 
-      <NavBarI18n />
+      <!-- <NavBarI18n /> -->
       <NavbarThemeSwitcher />
-      <NavbarShortcuts />
-      <NavBarNotifications class="me-2" />
+      <!-- <NavbarShortcuts /> -->
+      <!-- <NavBarNotifications class="me-2" /> -->
       <UserProfile />
     </template>
 

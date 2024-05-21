@@ -4,14 +4,17 @@ export default [
     title: 'Suplementares',
     icon: { icon: 'bx-copy' },
     children: [
-      { title: 'Tipos de despesa', to: 'apps-expenses-ExpenseType' },
-      { title: 'Despesas fixas', to: 'apps-expenses-FixedExpenses' },
+      { title: 'Abrigos', to: 'apps-expenses-ExpenseType' },
+      { title: 'Pets', to: 'apps-expenses-FixedExpenses' },
     ],
   },
-
+  { heading: 'Configurações' },
   {
-    title: 'Cadastrar despesa',
+    title: 'Cadastros',
     icon: { icon: 'bx-copy' },
-    to: 'apps-expenses-Expense',
+    children: [
+      { title: 'Usuários', to: 'apps-expenses-ExpenseType' },
+      { title: 'Perfis de usuários', to: 'apps-expenses-FixedExpenses' },
+    ],
   },
 ]

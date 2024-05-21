@@ -12,3 +12,7 @@ export const maskMoney = reactive({
   },
   reversed: true,
 })
+
+export const maskPhone = reactive({
+  mask: '(##) # ####-####',
+})
