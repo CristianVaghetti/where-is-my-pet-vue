@@ -1,8 +1,8 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
-import { requiredValidator, emailValidator } from '@validators'
-import { maskUpper, maskPhone } from '@/plugins/masks'
+import { requiredValidator, emailValidator, phoneValidator } from '@validators'
+import { maskUpper, maskCellPhone, maskPhone } from '@/plugins/masks'
 import { toBase64 } from "@/plugins/fileHelper"
 
 const props = defineProps({
@@ -27,6 +27,7 @@ const refForm = ref()
 const shelters = inject('shelters', [])
 const types = inject('types', [])
 const error = ref(false)
+const maskPhoneD = ref({})
 
 // 👉 Form
 const form = ref(JSON.parse(JSON.stringify(props.form)))
@@ -39,6 +40,7 @@ const resetEvent = () => {
 
   if(form.value.image){
     form.value.file = form.value.image
+    delete form.value.image
   }
 
   error.value = false
@@ -103,6 +105,20 @@ const handleFileChange = event => {
     })
   }
 }
+
+watch(() => form.value.owner_phone, () => {
+  let value = form.value.owner_phone?.replace(/\D/g, '')
+
+  maskPhoneD.value = value?.length <= 10 ? maskPhone : maskCellPhone 
+})
+
+watch(() => form.value.found, () => {
+  if(!form.value.found){
+    form.value.owner_email = null
+    form.value.owner_name = null
+    form.value.owner_phone = null
+  }
+})
 </script>
 
 <template>
@@ -192,7 +208,6 @@ const handleFileChange = event => {
                   ref="fileInput"
                   accept=".png, .jpg, .jpeg"
                   style="display: none;"
-                  :rules="[ requiredValidator ]"
                   @change="handleFileChange"
                 />
                 <br>
@@ -233,9 +248,9 @@ const handleFileChange = event => {
                 <VCol cols="12">
                   <VTextField
                     v-model="form.owner_phone"
-                    v-maska:[maskPhone]
+                    v-maska:[maskPhoneD]
                     label="Contato do dono"
-                    :rules="[form.found ? requiredValidator : true]"
+                    :rules="[form.found ? requiredValidator : true, phoneValidator]"
                   />
                 </VCol>
               </template>

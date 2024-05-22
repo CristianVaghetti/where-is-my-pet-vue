@@ -88,6 +88,15 @@ export const lengthValidator = (value, length) => {
   return String(value).length === length || `The Min Character field must be at least ${length} characters`
 }
 
+export const phoneValidator = value => {
+  if (isEmpty(value))
+    return true
+
+  value = value.replace(/\D/g, '')
+  
+  return String(value).length >= 10 || `Deve informar um telefone válido`
+}
+
 // 👉 Alpha-dash Validator
 export const alphaDashValidator = value => {
   if (isEmpty(value))

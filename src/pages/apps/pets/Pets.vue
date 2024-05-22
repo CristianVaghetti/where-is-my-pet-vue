@@ -194,7 +194,7 @@ provide('paginationData', paginationData)
             :key="index"
           >
             <td>{{ pet.id }}</td>
-            <td>{{ pet.personality }}</td>
+            <td>{{ pet.personality.substr(0,50) }}</td>
             <td>{{ pet.shelter?.city?.name }}</td>
             <td>{{ pet.shelter?.name }}</td>
             <td style="width: 1%; white-space: nowrap;">
