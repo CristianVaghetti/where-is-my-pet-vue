@@ -1,10 +1,9 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { VForm } from 'vuetify/components/VForm'
-import { requiredValidator } from '@validators'
-import { maskCEP, maskUpper, maskNumber } from '@/plugins/masks'
-import { getCep, getCities, getStates } from "@/plugins/utils"
-
+import { requiredValidator, emailValidator } from '@validators'
+import { maskUpper, maskPhone } from '@/plugins/masks'
+import { toBase64 } from "@/plugins/fileHelper"
 
 const props = defineProps({
   isDrawerOpen: {
@@ -19,15 +18,16 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:isDrawerOpen',
-  'addShelter',
-  'updateShelter',
-  'removeShelter',
+  'addPet',
+  'updatePet',
+  'removePet',
 ])
 
 const refForm = ref()
 const isLoading = ref(true)
 const cities = ref([])
 const states = ref([])
+const shelters = inject('shelters', [])
 
 // 👉 Form
 const form = ref(JSON.parse(JSON.stringify(props.form)))
@@ -43,8 +43,8 @@ const resetEvent = () => {
 
 watch(() => props.isDrawerOpen, resetEvent)
 
-const removeShelter = () => {
-  emit('removeShelter', form.value.id)
+const removePet = () => {
+  emit('removePet', form.value.id)
 
   // Close drawer
   emit('update:isDrawerOpen', false)
@@ -55,11 +55,13 @@ const onSubmit = () => {
     if (valid) {
       // If id exist on id => Update form
       if ('id' in form.value)
-        emit('updateShelter', form.value)
+        emit('updatePet', form.value)
 
       // Else => add new form
       else
-        emit('addShelter', form.value)
+        console.log(form.value)
+        
+      // emit('addPet', form.value)
 
       // Close drawer
       emit('update:isDrawerOpen', false)
@@ -79,44 +81,27 @@ const onCancel = () => {
   })
 }
 
-watch(() => form.value.zip_code, () => {
-  if (form.value.zip_code && form.value.zip_code.length > 8) {
-    getCep(form.value.zip_code).then(res => {
-      if (res.data.erro){
-        return
-      }
+const fileInput = ref(null)
 
-      if (!isLoading.value) {
-        form.value.address = res.data.logradouro
-        form.value.district = res.data.bairro
-      }
-      
-      isLoading.value = false
-      
-      form.value.state_id = res.data.uf
+const openInputImage = () => {
+  fileInput.value.click()
+}
 
-      setTimeout(() => {
-        form.value.city_id = res.data.localidade
-      }, 200)
-    }).catch(e =>{
-      console.log(e)
+const handleFileChange = event => {
+  const file = event.target.files[0]
+  if (file) {
+    // const reader = new FileReader()
+
+    // reader.onload = e => {
+    //   form.value.avatar_file = e.target.result
+    // }
+
+    // reader.readAsDataURL(file)
+    toBase64(file).then(base64String => {
+      form.value.avatar_file = base64String
     })
   }
-})
-
-watch(() => form.value.state_id, () => {
-  cities.value = []
-  form.value.city_id = null
-  if (form.value.state_id) {
-    getCities(form.value.state_id).then(res => {
-      cities.value = res.data.data
-    })
-  }
-})
-
-getStates().then(res => {
-  states.value = res.data.data
-})
+}
 </script>
 
 <template>
@@ -124,19 +109,19 @@ getStates().then(res => {
     temporary
     location="end"
     :model-value="props.isDrawerOpen"
-    width="420"
+    width="620"
     class="scrollable-content"
     @update:model-value="val => $emit('update:isDrawerOpen', val)"
   >
     <!-- 👉 Header -->
     <AppDrawerHeaderSection
-      :title="form.id ? 'Atualizar abrigo' : 'Adicionar abrigo'"
+      :title="form.id ? 'Atualizar pet' : 'Adicionar pet'"
       @cancel="$emit('update:isDrawerOpen', false)"
     >
       <template #beforeClose>
         <IconBtn
           v-show="form.id"
-          @click="removeShelter"
+          @click="removePet"
         >
           <VIcon
             size="18"
@@ -157,76 +142,87 @@ getStates().then(res => {
             <VRow>
               <VCol cols="12">
                 <VTextField
-                  v-model="form.name"
+                  v-model="form.personality"
                   v-maska:[maskUpper]
-                  label="Apelido"
+                  label="Personalidade"
+                  placeholder="Características marcandes físicas ou de personalidade"
                   :rules="[requiredValidator]"
                 />
               </VCol>
 
               <VCol cols="12">
-                <VTextField
-                  v-model="form.zip_code"
-                  v-maska:[maskCEP]
-                  label="CEP"
+                <VAutocomplete
+                  v-model="form.shelter_id"
+                  :items="shelters"
+                  label="Abrigo"
                   :rules="[requiredValidator]"
-                />
-              </VCol>
-
-              <VCol cols="12">
-                <VTextField
-                  v-model="form.address"
-                  v-maska:[maskUpper]
-                  label="Logradouro"
-                  :rules="[requiredValidator]"
-                />
-              </VCol>
-
-              <VCol cols="12">
-                <VTextField
-                  v-model="form.address_number"
-                  v-maska:[maskNumber]
-                  label="Número"
-                  :rules="[requiredValidator]"
-                />
-              </VCol>
-
-              <VCol cols="12">
-                <VTextField
-                  v-model="form.district"
-                  v-maska:[maskUpper]
-                  label="Bairro"
-                  :rules="[requiredValidator]"
-                />
-              </VCol>
-
-              <VCol cols="12">
-                <VTextField
-                  v-model="form.address_note"
-                  v-maska:[maskUpper]
-                  label="Complemento"
-                />
-              </VCol>
-
-              <VCol cols="12">
-                <VSelect 
-                  v-model="form.state_id"
-                  label="Estado"
-                  :items="states"
                   item-title="name"
-                  :item-value="Number.isInteger(form.state_id) ? 'id' : 'short'"
-                />
-              </VCol>
-
-              <VCol cols="12">
-                <VSelect 
-                  v-model="form.city_id"
-                  label="Cidade"
-                  :items="cities"
                   item-value="id"
-                  item-title="name"
                 />
               </VCol>
+
+              <VCol 
+                class="text-center" 
+                @click="openInputImage"
+              >
+                <VIcon
+                  v-if="!form.avatar_file"
+                  class="cursor-pointer"
+                  size="150"
+                  icon="mdi-camera"
+                />
+                <VImg
+                  v-else
+                  cover
+                  :src="form.avatar_file"
+                />
+                <VFileInput 
+                  ref="fileInput"
+                  accept=".png, .jpg, .jpeg"
+                  style="display: none;"
+                  :rules="[ requiredValidator ]"
+                  @change="handleFileChange"
+                /><br>
+                <SpanError v-if="!form.avatar_file" message="Foto obrigatória" />
+              </VCol>
+
+              <VCol cols="12">
+                <VSwitch
+                  v-model="form.found"
+                  label="Encontrado"
+                />
+              </VCol>
+
+              <VDivider class="mb-5" />
+
+              <template v-if="form.found">
+                <VCol cols="12">
+                  <VTextField
+                    v-model="form.owner_name"
+                    v-maska:[maskUpper]
+                    label="Nome do dono"
+                    :rules="[form.found ? requiredValidator : true]"
+                  />
+                </VCol>
+
+                <VCol cols="12">
+                  <VTextField
+                    v-model="form.owner_email"
+                    v-maska:[maskUpper]
+                    label="Email do dono"
+                    :rules="[form.found ? requiredValidator : true, emailValidator]"
+                  />
+                </VCol>
+
+                <VCol cols="12">
+                  <VTextField
+                    v-model="form.owner_phone"
+                    v-maska:[maskPhone]
+                    label="Contato do dono"
+                    :rules="[form.found ? requiredValidator : true]"
+                  />
+                </VCol>
+              </template>
 
               <VCol cols="12">
                 <VBtn

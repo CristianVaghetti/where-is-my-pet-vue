@@ -3,7 +3,7 @@ import { maskUpper } from '@/plugins/masks'
 import { useShelterStore } from '../../../views/apps/shelters/useShelterStore'
 import ShelterForm from './ShelterForm.vue'
 
-const title = ref('Abrigos')
+const title = ref('Cadastro de abrigos')
 const shelters = ref([])
 const store = useShelterStore()
 const isAddShelterDrawerVisible = ref(false)
@@ -115,7 +115,7 @@ provide('paginationData', paginationData)
         justify="center"
         class="mt-4"
       >
-        <VCol cols="1">
+        <VCol cols="2">
           <h3 class="mx-n4 mt-n4">
             {{ title }}
           </h3>

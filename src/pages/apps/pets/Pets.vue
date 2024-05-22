@@ -3,12 +3,13 @@ import { maskUpper } from '@/plugins/masks'
 import { usePetStore } from '../../../views/apps/pets/usePetStore'
 import PetForm from './PetForm.vue'
 
-const title = ref('Abrigos')
+const title = ref('Cadastro de animais')
 const pets = ref([])
 const store = usePetStore()
 const isAddPetDrawerVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
+const shelters = ref([])
 
 const formEmpty = ref({})
 
@@ -47,7 +48,13 @@ const fetch = () => {
     totalPets.value = res.data.data.pets.total
     totalPage.value =  Math.ceil(res.data.data.pets.total / rowPerPage.value)
   })
+
+  store.fetchShelters().then(res => {
+    shelters.value = res.data.data.shelters
+  })
 }
+
+provide('shelters', shelters)
 
 const add = e => {
   store.addPet(e).then(res => {
@@ -115,7 +122,7 @@ provide('paginationData', paginationData)
         justify="center"
         class="mt-4"
       >
-        <VCol cols="1">
+        <VCol cols="2">
           <h3 class="mx-n4 mt-n4">
             {{ title }}
           </h3>
