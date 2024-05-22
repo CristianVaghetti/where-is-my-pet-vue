@@ -15,9 +15,9 @@ const router = createRouter({
         const userData = JSON.parse(localStorage.getItem('userData') || '{}')
         const userRole = (userData && userData.profile) ? userData.profile.name : null
         if (userRole === 'Administrador')
-          return { name: 'home' }
+          return { name: '/home' }
         if (userRole === 'Teste')
-          return { name: 'access-control' }
+          return { name: '/home' }
         
         return { name: 'login', query: to.query }
       },
@@ -39,27 +39,8 @@ const router = createRouter({
 router.beforeEach(to => {
   const isLoggedIn = isUserLoggedIn()
 
-  /*
+  localStorage.setItem('pageBeforeSessionEnd', to.path)
   
-    ℹ️ Commented code is legacy code
-  
-    if (!canNavigate(to)) {
-      // Redirect to login if not logged in
-      // ℹ️ Only add `to` query param if `to` route is not index route
-      if (!isLoggedIn)
-        return next({ name: 'login', query: { to: to.name !== 'index' ? to.fullPath : undefined } })
-  
-      // If logged in => not authorized
-      return next({ name: 'not-authorized' })
-    }
-  
-    // Redirect if logged in
-    if (to.meta.redirectIfLoggedIn && isLoggedIn)
-      next('/')
-  
-    return next()
-  
-    */
   if (canNavigate(to)) {
     if (to.meta.redirectIfLoggedIn && isLoggedIn)
       return '/'

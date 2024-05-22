@@ -10,14 +10,15 @@ const isAddPetDrawerVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
 const shelters = ref([])
+const petTypes = ref([])
 
 const formEmpty = ref({
   personality: '',
   shelter_id: null,
-  file: '',
-  owner_name: '',
-  owner_email: '',
-  owner_phone: '',
+  file: null,
+  owner_name: null,
+  owner_email: null,
+  owner_phone: null,
 })
 
 const filters = ref({
@@ -59,9 +60,14 @@ const fetch = () => {
   store.fetchShelters().then(res => {
     shelters.value = res.data.data.shelters
   })
+
+  store.fetchTypes().then(res => {
+    petTypes.value = res.data.data.types
+  })
 }
 
 provide('shelters', shelters)
+provide('types', petTypes)
 
 const add = e => {
   store.addPet(e).then(res => {

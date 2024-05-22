@@ -22,7 +22,7 @@ const errors = ref({
 
 const refVForm = ref()
 const email = ref('vaghetticristian@gmail.com')
-const password = ref('password')
+const password = ref('admin')
 const rememberMe = ref(false)
 
 const login = () => {
@@ -36,11 +36,12 @@ const login = () => {
     ability.update(roles)
     localStorage.setItem('userData', JSON.stringify(user))
     localStorage.setItem('accessToken', JSON.stringify(token))
+    localStorage.setItem('lastActiveTime', Date.now())
 
     // Redirect to `to` query if exist or redirect to index route
     router.replace(route.query.to ? String(route.query.to) : '/home')
   }).catch(e => {
-    errors.value.email = e.response?.data?.msg || 'Deu ruim!'
+    errors.value.email = e.response?.data?.msg || 'Ocorreu um erro inesperado!'
   })
 }
 

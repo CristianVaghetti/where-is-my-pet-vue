@@ -22,7 +22,7 @@ const girlWithLaptop = useGenerateImageVariant(girlWithLaptopLight, girlWithLapt
         class="mx-auto"
       />
       <VBtn
-        to="/"
+        to="/home"
         class="mt-10"
       >
         Back to Home

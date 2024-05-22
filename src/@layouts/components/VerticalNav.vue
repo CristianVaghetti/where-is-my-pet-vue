@@ -91,7 +91,7 @@ const handleNavScroll = evt => {
     <div class="nav-header">
       <slot name="nav-header">
         <RouterLink
-          to="/"
+          to="/home"
           class="app-logo d-flex align-center gap-x-2 app-title-wrapper"
         >
           <VNodeRenderer :nodes="config.app.logo" />

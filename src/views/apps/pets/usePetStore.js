@@ -7,6 +7,8 @@ export const usePetStore = defineStore('pet', {
 
     async fetchShelters(params) { return axios.get('/shelter', { params }) },
 
+    async fetchTypes() { return axios.get('/pet-types') },
+
     async addPet(params) { return axios.post('/pet', params) },
 
     async editPet(params) { return axios.put(`/pet/${params.id}`, params) },

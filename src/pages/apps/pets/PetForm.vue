@@ -25,6 +25,8 @@ const emit = defineEmits([
 
 const refForm = ref()
 const shelters = inject('shelters', [])
+const types = inject('types', [])
+const error = ref(false)
 
 // 👉 Form
 const form = ref(JSON.parse(JSON.stringify(props.form)))
@@ -38,6 +40,8 @@ const resetEvent = () => {
   if(form.value.image){
     form.value.file = form.value.image
   }
+
+  error.value = false
 }
 
 watch(() => props.isDrawerOpen, resetEvent)
@@ -50,6 +54,12 @@ const removePet = () => {
 }
 
 const onSubmit = () => {
+  if(!form.value.file){
+    error.value = true
+
+    return
+  }
+  
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
       // If id exist on id => Update form
@@ -89,6 +99,7 @@ const handleFileChange = event => {
   if (file) {
     toBase64(file).then(base64String => {
       form.value.file = base64String
+      error.value = false
     })
   }
 }
@@ -131,10 +142,21 @@ const handleFileChange = event => {
           >
             <VRow>
               <VCol cols="12">
+                <VAutocomplete
+                  v-model="form.type_id"
+                  :items="types"
+                  label="Grupo"
+                  :rules="[requiredValidator]"
+                  item-title="name"
+                  item-value="id"
+                />
+              </VCol>
+
+              <VCol cols="12">
                 <VTextField
                   v-model="form.personality"
                   v-maska:[maskUpper]
-                  label="Personalidade"
+                  label="Característica/Personalidade"
                   placeholder="Características marcandes físicas ou de personalidade"
                   :rules="[requiredValidator]"
                 />
@@ -175,7 +197,7 @@ const handleFileChange = event => {
                 />
                 <br>
                 <SpanError
-                  v-if="!form.file" 
+                  v-if="error" 
                   message="Foto obrigatória" 
                 />
               </VCol>
