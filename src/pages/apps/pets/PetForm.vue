@@ -24,9 +24,6 @@ const emit = defineEmits([
 ])
 
 const refForm = ref()
-const isLoading = ref(true)
-const cities = ref([])
-const states = ref([])
 const shelters = inject('shelters', [])
 
 // 👉 Form
@@ -38,7 +35,9 @@ const resetEvent = () => {
     refForm.value?.resetValidation()
   })
 
-  isLoading.value = true
+  if(form.value.image){
+    form.value.file = form.value.image
+  }
 }
 
 watch(() => props.isDrawerOpen, resetEvent)
@@ -59,9 +58,7 @@ const onSubmit = () => {
 
       // Else => add new form
       else
-        console.log(form.value)
-        
-      // emit('addPet', form.value)
+        emit('addPet', form.value)
 
       // Close drawer
       emit('update:isDrawerOpen', false)
@@ -90,15 +87,8 @@ const openInputImage = () => {
 const handleFileChange = event => {
   const file = event.target.files[0]
   if (file) {
-    // const reader = new FileReader()
-
-    // reader.onload = e => {
-    //   form.value.avatar_file = e.target.result
-    // }
-
-    // reader.readAsDataURL(file)
     toBase64(file).then(base64String => {
-      form.value.avatar_file = base64String
+      form.value.file = base64String
     })
   }
 }
@@ -166,7 +156,7 @@ const handleFileChange = event => {
                 @click="openInputImage"
               >
                 <VIcon
-                  v-if="!form.avatar_file"
+                  v-if="!form.file"
                   class="cursor-pointer"
                   size="150"
                   icon="mdi-camera"
@@ -174,7 +164,7 @@ const handleFileChange = event => {
                 <VImg
                   v-else
                   cover
-                  :src="form.avatar_file"
+                  :src="form.file"
                 />
                 <VFileInput 
                   ref="fileInput"
@@ -182,8 +172,12 @@ const handleFileChange = event => {
                   style="display: none;"
                   :rules="[ requiredValidator ]"
                   @change="handleFileChange"
-                /><br>
-                <SpanError v-if="!form.avatar_file" message="Foto obrigatória" />
+                />
+                <br>
+                <SpanError
+                  v-if="!form.file" 
+                  message="Foto obrigatória" 
+                />
               </VCol>
 
               <VCol cols="12">

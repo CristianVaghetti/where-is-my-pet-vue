@@ -11,7 +11,14 @@ const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
 const shelters = ref([])
 
-const formEmpty = ref({})
+const formEmpty = ref({
+  personality: '',
+  shelter_id: null,
+  file: '',
+  owner_name: '',
+  owner_email: '',
+  owner_phone: '',
+})
 
 const filters = ref({
   filter: '',
@@ -162,6 +169,9 @@ provide('paginationData', paginationData)
               ID
             </th>
             <th class="text-left">
+              Personalidade
+            </th>
+            <th class="text-left">
               Cidade
             </th>
             <th class="text-left">
@@ -178,7 +188,8 @@ provide('paginationData', paginationData)
             :key="index"
           >
             <td>{{ pet.id }}</td>
-            <td>{{ pet.city?.name }}</td>
+            <td>{{ pet.personality }}</td>
+            <td>{{ pet.shelter?.city?.name }}</td>
             <td>{{ pet.shelter?.name }}</td>
             <td style="width: 1%; white-space: nowrap;">
               <VBtn

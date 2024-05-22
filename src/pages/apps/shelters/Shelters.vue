@@ -10,7 +10,16 @@ const isAddShelterDrawerVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
 
-const formEmpty = ref({})
+const formEmpty = ref({
+  name: '',
+  zip_code: '',
+  address: '',
+  address_number: '',
+  district: '',
+  address_note: '',
+  state_id: null,
+  city_id: null,
+})
 
 const filters = ref({
   filter: '',
