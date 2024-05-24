@@ -31,6 +31,8 @@ const checkRedirect = () => {
 
 // ℹ️ Add request interceptor to send the authorization header on each subsequent request after login
 axiosIns.interceptors.request.use(config => {
+  checkRedirect()
+  
   // Retrieve token from localStorage
   const token = localStorage.getItem('accessToken')
 

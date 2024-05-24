@@ -1,14 +1,17 @@
 <script setup>
 import { usePetStore } from '@/views/apps/pets/usePetStore'
+import HomeModal from '@/pages/apps/pets/HomeModal.vue'
 
 const store = usePetStore()
 
 // pagination
-const rowPerPage = ref(5)
+const rowPerPage = ref(20)
 const currentPage = ref(1)
 const totalPage = ref(1)
 const totalPets = ref(0)
 const pets = ref([])
+const isModalOpen = ref(false)
+const petInfo = ref({})
 
 const filters = ref({
   filter: '',
@@ -35,6 +38,30 @@ const paginationData = computed(() => {
   return `${ firstIndex }-${ lastIndex } de ${ totalPets.value }`
 })
 
+const handleIcon = type => {
+  switch (type) {
+  case 1:
+    return 'mdi-dog'
+    
+  case 2:
+    return 'mdi-cat'
+
+  case 3:
+    return 'mdi-horse'
+    
+  default:
+    return 'mdi-alert-circle'
+  }
+}
+
+const openModal = pet => {
+  petInfo.value = { ...pet }
+  isModalOpen.value= true
+}
+
+provide('petInfo', petInfo)
+provide('isModalOpen', isModalOpen)
+
 // provides pagination
 provide('row', rowPerPage)
 provide('current', currentPage)
@@ -47,37 +74,40 @@ onMounted(() => {
 </script>
 
 <template>
-  <VRow no-gutters>
-    <VCol 
-      v-for="(pet, index) in pets"
-      :key="index"
-      cols="12"
-      md="6"
-      lg="4"
-      class="d-flex justify-center mb-6"
-    >
-      <VCard
-        width="400"
+  <div>
+    <PaginationComponent @changed="fetch" />
+    <VRow no-gutters>
+      <VCol 
+        v-for="(pet, index) in pets"
+        :key="index"
+        cols="12"
+        md="6"
+        lg="4"
+        class="d-flex justify-center mb-2"
       >
-        <VCardTitle>
-          <VIcon 
-            icon="mdi-cat" 
-            class="mx-2" 
-          />
-          {{ pet.personality }}
-        </VCardTitle>
-        <VCardText>
-          <VImg
-            cover
-            :src="pet.image"
-          />
-        </VCardText>
-      </VCard>
-    </VCol>
-  </VRow>
-  <PaginationComponent
-    @changed="fetch"
-  />
+        <VCard
+          width="500"
+        >
+          <VCardTitle>
+            <VIcon 
+              :icon="handleIcon(pet.type_id)" 
+              class="me-2" 
+            />
+            {{ pet.personality }}
+          </VCardTitle>
+          <VCardText>
+            <VImg
+              class="cursor-pointer"
+              :src="pet.image"
+              @click="openModal(pet)"
+            />
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
+    <PaginationComponent @changed="fetch" />
+    <HomeModal />
+  </div>
 </template>
 
 <route lang="yaml">
