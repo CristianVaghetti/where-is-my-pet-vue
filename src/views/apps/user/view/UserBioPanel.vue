@@ -117,7 +117,7 @@ const resolveUserRoleVariant = role => {
               <VListItemTitle>
                 <span class="font-weight-medium me-1">Usuário:</span>
                 <span class="text-body-1 text-medium-emphasis">
-                  {{ props.userData.usuario }}
+                  {{ props.userData.name }}
                 </span>
               </VListItemTitle>
             </VListItem>
@@ -158,7 +158,7 @@ const resolveUserRoleVariant = role => {
                 <span class="font-weight-medium me-1">
                   Celular:
                 </span>
-                <span class="text-body-1 text-medium-emphasis">{{ props.userData.celular }}</span>
+                <span class="text-body-1 text-medium-emphasis">{{ props.userData.phone }}</span>
               </VListItemTitle>
             </VListItem>
           </VList>

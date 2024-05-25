@@ -9,15 +9,15 @@ const pageMiscError = useGenerateImageVariant(pageMiscErrorLight, pageMiscErrorD
 <template>
   <div class="misc-wrapper">
     <ErrorHeader
-      error-title="Page Not Found ⚠️"
-      error-description="Oops! 😖 The requested URL was not found on this server."
+      error-title="Página não encontrada ⚠️"
+      error-description="A URL que voçê digitou não foi encontrada em nosso site."
     />
 
     <!-- 👉 Image -->
     <div class="misc-avatar w-100 text-center">
       <VImg
         :src="pageMiscError"
-        alt="Coming Soon"
+        alt="Breve"
         :max-width="500"
         class="mx-auto"
       />

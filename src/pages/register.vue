@@ -11,6 +11,7 @@ import {
 } from '@validators'
 import girlWithLaptopDark from '@images/illustrations/girl-with-laptop-dark.png'
 import girlWithLaptopLight from '@images/illustrations/girl-with-laptop-light.png'
+import { themeConfig } from '@themeConfig'
 
 const girlWithLaptop = useGenerateImageVariant(girlWithLaptopLight, girlWithLaptopDark)
 const refVForm = ref()
@@ -195,15 +196,6 @@ const onSubmit = () => {
                 >
                   Sign in instead
                 </RouterLink>
-              </VCol>
-
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
-                <VDivider />
-                <span class="mx-4">or</span>
-                <VDivider />
               </VCol>
             </VRow>
           </VForm>

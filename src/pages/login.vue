@@ -23,7 +23,6 @@ const errors = ref({
 const refVForm = ref()
 const email = ref('vaghetticristian@gmail.com')
 const password = ref('admin')
-const rememberMe = ref(false)
 
 const login = () => {
   axios.post('/auth', {
@@ -152,10 +151,6 @@ const onSubmit = () => {
                 />
 
                 <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-6">
-                  <VCheckbox
-                    v-model="rememberMe"
-                    label="Remember me"
-                  />
                   <RouterLink
                     class="text-primary text-sm ms-2 mb-1"
                     :to="{ name: 'forgot-password' }"
@@ -185,14 +180,6 @@ const onSubmit = () => {
                 >
                   Create an account
                 </RouterLink>
-              </VCol>
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
-                <VDivider />
-                <span class="mx-4">or</span>
-                <VDivider />
               </VCol>
             </VRow>
           </VForm>
