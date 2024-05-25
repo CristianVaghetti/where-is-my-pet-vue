@@ -1,24 +1,25 @@
 <script setup>
 import { maskUpper } from '@/plugins/masks'
-import { usePetStore } from '@/views/apps/pets/usePetStore'
-import PetForm from './PetForm.vue'
+import { useUserStore } from '@/views/apps/user/useUserStore'
+import UserForm from './UserForm.vue'
 
-const title = ref('Cadastro de animais')
-const pets = ref([])
-const store = usePetStore()
-const isAddPetDrawerVisible = ref(false)
+const title = ref('Cadastro de usuários')
+const users = ref([])
+const store = useUserStore()
+const isAddUserDrawerVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
-const shelters = ref([])
-const petTypes = ref([])
+const profiles = ref([])
 
 const formEmpty = ref({
-  personality: '',
-  shelter_id: null,
-  file: null,
-  owner_name: null,
-  owner_email: null,
-  owner_phone: null,
+  profile_id: null,
+  avatar: null,
+  name: null,
+  username: null,
+  phone: null,
+  email: null,
+  password: null,
+  status: false,
 })
 
 const filters = ref({
@@ -31,17 +32,17 @@ const form = ref({})
 const rowPerPage = ref(5)
 const currentPage = ref(1)
 const totalPage = ref(1)
-const totalPets = ref(0)
+const totalUsers = ref(0)
 
 onMounted(() => {
   fetch()
 })
 
 const paginationData = computed(() => {
-  const firstIndex = pets.value.length ? (currentPage.value - 1) * rowPerPage.value + 1 : 0
-  const lastIndex = pets.value.length + (currentPage.value - 1) * rowPerPage.value
+  const firstIndex = users.value.length ? (currentPage.value - 1) * rowPerPage.value + 1 : 0
+  const lastIndex = users.value.length + (currentPage.value - 1) * rowPerPage.value
   
-  return `${ firstIndex }-${ lastIndex } de ${ totalPets.value }`
+  return `${ firstIndex }-${ lastIndex } de ${ totalUsers.value }`
 })
 
 const fetch = () => {
@@ -51,32 +52,27 @@ const fetch = () => {
     ...filters.value,
   }
 
-  store.fetchPets(params).then(res => {
-    pets.value = res.data.data.pets.items
-    totalPets.value = res.data.data.pets.total
-    totalPage.value =  Math.ceil(res.data.data.pets.total / rowPerPage.value)
+  store.fetchUsers(params).then(res => {
+    users.value = res.data.data.users.items
+    totalUsers.value = res.data.data.users.total
+    totalPage.value =  Math.ceil(res.data.data.users.total / rowPerPage.value)
   })
 
-  store.fetchShelters().then(res => {
-    shelters.value = res.data.data.shelters
-  })
-
-  store.fetchTypes().then(res => {
-    petTypes.value = res.data.data.types
+  store.fetchProfiles().then(res => {
+    profiles.value = res.data.data.profiles
   })
 }
 
-provide('shelters', shelters)
-provide('types', petTypes)
+provide('profiles', profiles)
 
 const add = e => {
-  store.addPet(e).then(res => {
+  store.addUser(e).then(res => {
     fetch()
   })
 }
 
 const edit = e => {
-  store.editPet(e).then(res => {
+  store.editUser(e).then(res => {
     fetch()
   })
 }
@@ -84,7 +80,7 @@ const edit = e => {
 const destroy = e => {
   let id = Number.isInteger(e) ? e : idToDestroy.value
 
-  store.removePet(id).then(res => {
+  store.removeUser(id).then(res => {
     fetch()
   })
 }
@@ -96,7 +92,7 @@ const confirmation = id => {
 
 const showDrawer = e => {
   form.value = { ...e }
-  isAddPetDrawerVisible.value= true
+  isAddUserDrawerVisible.value= true
 }
 
 let timer
@@ -175,13 +171,13 @@ provide('paginationData', paginationData)
               ID
             </th>
             <th class="text-left">
-              Personalidade
+              Nome
             </th>
             <th class="text-left">
-              Cidade
+              Usuário
             </th>
             <th class="text-left">
-              Abrigo
+              Perfil
             </th>
             <th class="text-left">
               Ações
@@ -190,20 +186,20 @@ provide('paginationData', paginationData)
         </thead>
         <tbody>
           <tr 
-            v-for="(pet, index) in pets"
+            v-for="(user, index) in users"
             :key="index"
           >
-            <td>{{ pet.id }}</td>
-            <td>{{ pet.personality.substr(0,50) }}</td>
-            <td>{{ pet.shelter?.city?.name }}</td>
-            <td>{{ pet.shelter?.name }}</td>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.profile?.name }}</td>
             <td style="width: 1%; white-space: nowrap;">
               <VBtn
                 color="#0000ff"
                 title="Editar"
                 variant="text"
                 icon="mdi-square-edit-outline"
-                @click="showDrawer(pet)"
+                @click="showDrawer(user)"
               />
 
               <VBtn
@@ -211,12 +207,12 @@ provide('paginationData', paginationData)
                 title="Excluir"
                 variant="text"
                 icon="mdi-delete-outline"
-                @click="confirmation(pet.id)"
+                @click="confirmation(user.id)"
               />
             </td>
           </tr>
         </tbody>
-        <tfoot v-show="!pets.length">
+        <tfoot v-show="!users.length">
           <tr>
             <td
               colspan="7"
@@ -232,12 +228,12 @@ provide('paginationData', paginationData)
       />
     </VCard>
 
-    <PetForm
-      v-model:isDrawerOpen="isAddPetDrawerVisible"
+    <UserForm
+      v-model:isDrawerOpen="isAddUserDrawerVisible"
       :form="{ ...form }"
-      @update-pet="edit"
-      @add-pet="add"
-      @remove-pet="destroy"
+      @update-user="edit"
+      @add-user="add"
+      @remove-user="destroy"
     />
 
     <ConfirmDialog

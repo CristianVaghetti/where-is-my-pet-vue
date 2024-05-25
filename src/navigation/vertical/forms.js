@@ -13,7 +13,7 @@ export default [
     title: 'Cadastros',
     icon: { icon: 'bx-copy' },
     children: [
-      { title: 'Usuários', to: 'access-control' },
+      { title: 'Usuários', to: 'apps-user-list-Users' },
       { title: 'Perfis de usuários', to: 'access-control' },
     ],
   },

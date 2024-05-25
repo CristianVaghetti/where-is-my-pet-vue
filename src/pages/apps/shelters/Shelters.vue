@@ -1,6 +1,6 @@
 <script setup>
 import { maskUpper } from '@/plugins/masks'
-import { useShelterStore } from '../../../views/apps/shelters/useShelterStore'
+import { useShelterStore } from '@/views/apps/shelters/useShelterStore'
 import ShelterForm from './ShelterForm.vue'
 
 const title = ref('Cadastro de abrigos')
