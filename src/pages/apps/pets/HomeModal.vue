@@ -93,8 +93,8 @@ const handleShelterInfo = shelter => {
               style="color:chocolate"
             >
               <p>Endereço: {{ handleShelterInfo(pet.shelter) }}</p>
-              <p>Responsável: {{ }}</p>
-              <p>Contato: {{ }}</p>
+              <p>Responsável: {{ pet.shelter.responsible.name }}</p>
+              <p>Contato: {{ pet.shelter.responsible.phone }}</p>
             </VCardText>
           </VCard>
           <VRow>

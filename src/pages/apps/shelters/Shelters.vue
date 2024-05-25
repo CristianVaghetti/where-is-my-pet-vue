@@ -9,6 +9,7 @@ const store = useShelterStore()
 const isAddShelterDrawerVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
+const users = ref([])
 
 const formEmpty = ref({
   name: '',
@@ -56,7 +57,13 @@ const fetch = () => {
     totalShelters.value = res.data.data.shelters.total
     totalPage.value =  Math.ceil(res.data.data.shelters.total / rowPerPage.value)
   })
+
+  store.fetchUsers().then(res => {
+    users.value = res.data.data.users
+  })
 }
+
+provide('users', users)
 
 const add = e => {
   store.addShelter(e).then(res => {
