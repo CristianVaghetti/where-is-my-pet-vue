@@ -1,7 +1,7 @@
 <script setup>
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-import { requiredValidator, emailValidator } from '@validators'
+import { requiredValidator, passwordValidator, confirmedValidator } from '@validators'
 import girlUnlockPasswordDark from '@images/illustrations/girl-unlock-password-dark.png'
 import girlUnlockPasswordLight from '@images/illustrations/girl-unlock-password-light.png'
 import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVariant'
@@ -9,48 +9,58 @@ import axios from '@axios'
 
 const girlUnlockPassword = useGenerateImageVariant(girlUnlockPasswordLight, girlUnlockPasswordDark)
 
+const route = useRoute()
 const refVForm = ref()
-const email = ref('')
-const disparouEmail = ref(false)
+const forgot = route.query.forgot === '1' ? true : false
 const alerta = ref(false)
 const texto = ref('')
 const variante = ref('')
+const disparouReset = ref(false)
+
+const form = ref({
+  newPassword: '',
+  confirmPassword: '',
+  token: route.query.token,
+})
 
 const errors = ref({
-  email: undefined,
+  newPassword: undefined,
+  confirmPassword: undefined,
 })
+
+const isPasswordVisible = ref(false)
+const isConfirmPasswordVisible = ref(false)
 
 const onSubmit = () => {
   refVForm.value?.validate().then(({ valid: isValid }) => {
     if (isValid)
-      disparaEmail()
+      resetarSenha()
   })
 }
 
-const disparaEmail = () => {
-  disparouEmail.value = true
+const resetarSenha = () => {
+  const formData = { ...form.value }
 
-  axios.post('user/password/forgot', { email: email.value }).then(r => {
-    texto.value = 'Mensagem enviada com sucesso!'
+  disparouReset.value = true
+
+  axios.post('user/password/reset', formData).then(r => { 
+    texto.value = r.data.msg
     variante.value = 'success'
     alerta.value = true
-    errors.value.email = undefined // se o usuário digitou errado depois corrigiu tem que limpar o erro
-    disparouEmail.value = false
+    disparouReset.value = false
+
+
   }).catch(e => {
-    if (e.response) {
-      errors.value.email = e.response.data.msg
-    } else {
-      texto.value = 'Ocorreu um erro, tente novamente!'
-      variante.value = 'error'
-      alerta.value = true
-      disparouEmail.value = false
-    }
+    texto.value = 'Ocorreu um erro, tente novamente!'
+    variante.value = 'error'
+    alerta.value = true
+    disparouReset.value = false
   })
 }
 </script>
 
 <template>
-  <VRow
+  <VRow 
     class="auth-wrapper"
     no-gutters
   >
@@ -91,11 +101,11 @@ const disparaEmail = () => {
         </VCardItem>
 
         <VCardText>
-          <h6 class="text-h6 mb-1">
-            Esqueceu sua senha? 🔒
+          <h6 class="text-h6 mb-5">
+            Redefinir senha 🔒
           </h6>
           <p class="mb-0">
-            Digite o seu email cadastrado! Vamos enviar instruções para recuperar sua senha
+            Não salvamos as senhas dos nossos usuários, como você não recorda a sua, iremos redefini-la!
           </p>
         </VCardText>
 
@@ -105,36 +115,50 @@ const disparaEmail = () => {
             @submit.prevent="onSubmit"
           >
             <VRow>
-              <!-- email -->
+              <!-- password -->
               <VCol cols="12">
                 <VTextField
-                  v-model="email"
-                  :rules="[requiredValidator, emailValidator]"
-                  :error-messages="errors.email"
-                  label="Email"
-                  type="email"
+                  v-model="form.newPassword"
+                  :rules="[requiredValidator, passwordValidator]"
+                  :error-messages="errors.newPassword"
+                  label="Nova senha"
+                  :type="isPasswordVisible ? 'text' : 'password'"
+                  :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
                   class="mb-4"
+                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 
-                <!-- Reset link -->
+                <!-- Confirm Password -->
+
+                <VTextField
+                  v-model="form.confirmPassword"
+                  :rules="[requiredValidator, confirmedValidator(form.confirmPassword, form.newPassword)]"
+                  :error-messages="errors.confirmPassword"
+                  label="Confirmar Senha"
+                  :type="isConfirmPasswordVisible ? 'text' : 'password'"
+                  :append-inner-icon="isConfirmPasswordVisible ? 'bx-hide' : 'bx-show'"
+                  class="mb-4"
+                  @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
+                />
+
+                <!-- reset password -->
+
                 <VBtn
                   v-if="variante !== 'success'"
-                  :disabled="disparouEmail"
                   block
+                  :disabled="disparouReset"
                   @click="onSubmit"
                 >
                   <VProgressCircular
-                    v-if="disparouEmail"
+                    v-if="disparouReset"
                     indeterminate
                     color="primary"
                     :size="30"
                     :width="5"
                   />
-                  <span v-if="!disparouEmail">Enviar</span>
+                  <span v-if="!disparouReset">Redefinir senha</span>
                 </VBtn>
 
-                <!-- compoenente de alertas -->
-                
                 <VSnackbar
                   v-model="alerta"
                   :timeout="8000"
@@ -151,16 +175,17 @@ const disparaEmail = () => {
                   />
                   <span>{{ texto }}</span>
                 </VSnackbar>
+              </VCol>
 
-                <!-- back to login -->
-
+              <!-- back to login -->
+              <VCol cols="12">
                 <RouterLink
-                  class="d-flex align-center justify-center mt-5"
+                  class="d-flex align-center justify-center"
                   :to="{ name: 'login' }"
                 >
                   <VIcon
-                    class="flip-in-rtl"
                     icon="bx-chevron-left"
+                    class="flip-in-rtl"
                   />
                   <span>Voltar à tela de login</span>
                 </RouterLink>

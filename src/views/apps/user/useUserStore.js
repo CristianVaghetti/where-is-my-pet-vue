@@ -6,5 +6,9 @@ export const useUserStore = defineStore('UserStore', {
     fetchUsers(params) { return axios.get('/users', { params }) },
 
     fetchProfiles(params) { return axios.get('/profile', { params }) },
+
+    addUser(params) { return axios.post('/user', params) },
+    
+    editUser(params) { return axios.put(`/user/${params.id}`, params) },
   },
 })

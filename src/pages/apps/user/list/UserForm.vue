@@ -35,7 +35,6 @@ const resetEvent = () => {
   nextTick(() => {
     refForm.value?.resetValidation()
   })
-  console.log(form.value)
 }
 
 watch(() => props.isDrawerOpen, resetEvent)
@@ -85,7 +84,6 @@ watch(() => form.value.phone, () => {
 const fileInput = ref(null)
 
 const openInputImage = () => {
-  console.log('piu')
   fileInput.value.click()
 }
 

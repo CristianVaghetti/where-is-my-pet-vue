@@ -239,7 +239,6 @@ watch(() => form.value.found, () => {
                 <VCol cols="12">
                   <VTextField
                     v-model="form.owner_email"
-                    v-maska:[maskUpper]
                     label="Email do dono"
                     :rules="[form.found ? requiredValidator : true, emailValidator]"
                   />
