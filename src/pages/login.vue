@@ -24,6 +24,17 @@ const refVForm = ref()
 const email = ref('vaghetticristian@gmail.com')
 const password = ref('Admin@123')
 
+const userAbilities = [
+  {
+    action: 'read',
+    subject: 'Auth',
+  },
+  {
+    action: 'read',
+    subject: 'Home',
+  },
+]
+
 const login = () => {
   axios.post('/auth', {
     email: email.value,
@@ -31,8 +42,10 @@ const login = () => {
   }).then(r => {
     const { token, user, roles } = r.data.data
 
-    localStorage.setItem('userAbilities', JSON.stringify(roles))
-    ability.update(roles)
+    const abilities = userAbilities.concat(roles)
+
+    localStorage.setItem('userAbilities', JSON.stringify(abilities))
+    ability.update(abilities)
     localStorage.setItem('userData', JSON.stringify(user))
     localStorage.setItem('accessToken', JSON.stringify(token))
     localStorage.setItem('lastActiveTime', Date.now())

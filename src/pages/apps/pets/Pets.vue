@@ -247,3 +247,9 @@ provide('paginationData', paginationData)
     />
   </div>
 </template>
+
+<route lang="yaml">
+  meta:
+    action: read
+    subject: pets
+  </route>
