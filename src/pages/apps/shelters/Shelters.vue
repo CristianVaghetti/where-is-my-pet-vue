@@ -158,6 +158,7 @@ provide('paginationData', paginationData)
           <VBtn
             color="success"
             prepend-icon="mdi-plus"
+            :disabled="!$can('create', 'shelters')"
             @click="showDrawer(formEmpty)"
           >
             Cadastrar
@@ -195,6 +196,7 @@ provide('paginationData', paginationData)
                 title="Editar"
                 variant="text"
                 icon="mdi-square-edit-outline"
+                :disabled="!$can('update', 'shelters')"
                 @click="showDrawer(shelter)"
               />
 
@@ -203,6 +205,7 @@ provide('paginationData', paginationData)
                 title="Excluir"
                 variant="text"
                 icon="mdi-delete-outline"
+                :disabled="!$can('delete', 'shelters')"
                 @click="confirmation(shelter.id)"
               />
             </td>

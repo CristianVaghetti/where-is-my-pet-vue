@@ -158,6 +158,7 @@ provide('paginationData', paginationData)
           <VBtn
             color="success"
             prepend-icon="mdi-plus"
+            :disabled="!$can('create', 'users')"
             @click="showDrawer(formEmpty)"
           >
             Cadastrar
@@ -199,6 +200,7 @@ provide('paginationData', paginationData)
                 title="Editar"
                 variant="text"
                 icon="mdi-square-edit-outline"
+                :disabled="!$can('update', 'users')"
                 @click="showDrawer(user)"
               />
 
@@ -207,6 +209,7 @@ provide('paginationData', paginationData)
                 title="Excluir"
                 variant="text"
                 icon="mdi-delete-outline"
+                :disabled="!$can('delete', 'users')"
                 @click="confirmation(user.id)"
               />
             </td>

@@ -9,8 +9,8 @@ const girlWithLaptop = useGenerateImageVariant(girlWithLaptopLight, girlWithLapt
 <template>
   <div class="misc-wrapper">
     <ErrorHeader
-      error-title="You are not authorized! 🔐"
-      error-description="You don't have permission to access this page. Go Home!"
+      error-title="Você não tem permissão pra chegar aqui! 🔐"
+      error-description="Voçẽ não pode acessar essa página pois não possui a devida permissão. Volte para o início!"
     />
 
     <!-- 👉 Image -->
@@ -25,7 +25,7 @@ const girlWithLaptop = useGenerateImageVariant(girlWithLaptopLight, girlWithLapt
         to="/home"
         class="mt-10"
       >
-        Back to Home
+        Voltar
       </VBtn>
     </div>
   </div>

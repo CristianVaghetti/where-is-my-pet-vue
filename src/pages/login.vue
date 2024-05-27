@@ -22,7 +22,7 @@ const errors = ref({
 
 const refVForm = ref()
 const email = ref('vaghetticristian@gmail.com')
-const password = ref('Admin@123')
+const password = ref('Teste@123')
 
 const userAbilities = [
   {
