@@ -1,8 +1,10 @@
 <script setup>
 import { usePetStore } from '@/views/apps/pets/usePetStore'
+import { useShelterStore } from '@/views/apps/shelters/useShelterStore'
 import HomeModal from '@/pages/apps/pets/HomeModal.vue'
 
-const store = usePetStore()
+const storePet = usePetStore()
+const storeShelter = useShelterStore()
 
 // pagination
 const rowPerPage = ref(20)
@@ -12,9 +14,13 @@ const totalPets = ref(0)
 const pets = ref([])
 const isModalOpen = ref(false)
 const petInfo = ref({})
+const types = ref([])
+const shelters =ref([])
 
 const filters = ref({
   filter: '',
+  type_id: null,
+  shelter_id: null,
 })
 
 const fetch = () => {
@@ -24,7 +30,7 @@ const fetch = () => {
     ...filters.value,
   }
 
-  store.fetchPets(params).then(res => {
+  storePet.fetchPets(params).then(res => {
     pets.value = res.data.data.pets.items
     totalPets.value = res.data.data.pets.total
     totalPage.value =  Math.ceil(res.data.data.pets.total / rowPerPage.value)
@@ -70,11 +76,46 @@ provide('paginationData', paginationData)
 
 onMounted(() => {
   fetch()
+
+  storePet.fetchTypes().then(res => {
+    types.value = res.data.data.types
+  })
+
+  storeShelter.fetchShelters().then(res => {
+    shelters.value = res.data.data.shelters
+  })
 })
+
+watch([() => filters.value.type_id, () => filters.value.shelter_id], fetch)
 </script>
 
 <template>
   <div>
+    <VCard title="Filtros">
+      <VCardText>
+        <VRow>
+          <VCol cols="6">
+            <VAutocomplete 
+              v-model="filters.type_id"
+              :items="types"
+              label="Tipo"
+              item-title="name"
+              item-value="id"
+            />
+          </VCol>
+
+          <VCol cols="6">
+            <VAutocomplete 
+              v-model="filters.shelter_id"
+              :items="shelters"
+              label="Abrigo"
+              item-title="name"
+              item-value="id"
+            />
+          </VCol>
+        </VRow>
+      </VCardText>
+    </VCard>
     <PaginationComponent @changed="fetch" />
     <VRow no-gutters>
       <VCol 

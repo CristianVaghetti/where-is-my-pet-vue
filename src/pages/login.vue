@@ -23,6 +23,7 @@ const errors = ref({
 const refVForm = ref()
 const email = ref('vaghetticristian@gmail.com')
 const password = ref('Teste@123')
+const showLoginForm = ref(false)
 
 const userAbilities = [
   {
@@ -62,6 +63,13 @@ const onSubmit = () => {
     if (isValid)
       login()
   })
+}
+
+const giveGuestAbilities = () => {
+  email.value = 'guest@guest.com'
+  password.value = 'guest'
+
+  login()
 }
 </script>
 
@@ -111,30 +119,39 @@ const onSubmit = () => {
 
         <VCardText>
           <h6 class="text-h6 mb-1">
-            Welcome to {{ themeConfig.app.title }}! 👋🏻
+            Bem vindo ao {{ themeConfig.app.title }}! 👋🏻
           </h6>
 
           <p class="mb-0">
-            Please sign-in to your account and start the adventure
+            Faça login ou epenas procure seu pet
           </p>
         </VCardText>
 
-        <VCardText>
-          <VAlert
+        <VCardText 
+          v-if="!showLoginForm" 
+          class="d-flex my-4"
+        >
+          <VBtn 
+            class="me-4"
             color="primary"
-            variant="tonal"
+            rounded="xl"
+            size="x-large"
+            @click="showLoginForm = true"
           >
-            <p class="text-caption mb-2">
-              Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
-            </p>
-
-            <p class="text-caption mb-0">
-              Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
-            </p>
-          </VAlert>
+            Login
+          </VBtn>
+        
+          <VBtn
+            color="primary"
+            rounded="xl"
+            size="x-large"
+            @click="giveGuestAbilities"
+          >
+            Procurar meu pet
+          </VBtn>
         </VCardText>
 
-        <VCardText>
+        <VCardText v-if="showLoginForm">
           <VForm
             ref="refVForm"
             @submit.prevent="onSubmit"
@@ -168,7 +185,7 @@ const onSubmit = () => {
                     class="text-primary text-sm ms-2 mb-1"
                     :to="{ name: 'forgot-password' }"
                   >
-                    Forgot Password?
+                    Esqueci minha senha
                   </RouterLink>
                 </div>
 
@@ -177,7 +194,7 @@ const onSubmit = () => {
                   type="submit"
                   class="mb-1"
                 >
-                  Login
+                  Entrar
                 </VBtn>
               </VCol>
 
@@ -186,12 +203,12 @@ const onSubmit = () => {
                 cols="12"
                 class="text-center"
               >
-                <span>New on our platform?</span>
+                <span>Quero criar minha conta!</span>
                 <RouterLink
                   class="text-primary ms-2"
                   :to="{ name: 'register' }"
                 >
-                  Create an account
+                  Criar conta
                 </RouterLink>
               </VCol>
             </VRow>
