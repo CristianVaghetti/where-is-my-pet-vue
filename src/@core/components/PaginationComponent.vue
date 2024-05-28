@@ -19,7 +19,7 @@ watch(() => currentPage.value, () => {
 </script>
 
 <template>
-  <VDivider />
+  <VDivider class="mt-4" />
   <VCardText class="d-flex justify-end gap-4 pa-2">
     <div
       class="d-flex align-center"

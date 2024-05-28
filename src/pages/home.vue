@@ -1,6 +1,7 @@
 <script setup>
 import { usePetStore } from '@/views/apps/pets/usePetStore'
 import { useShelterStore } from '@/views/apps/shelters/useShelterStore'
+import { getCities, getStates } from '@/plugins/utils'
 import HomeModal from '@/pages/apps/pets/HomeModal.vue'
 
 const storePet = usePetStore()
@@ -16,11 +17,15 @@ const isModalOpen = ref(false)
 const petInfo = ref({})
 const types = ref([])
 const shelters =ref([])
+const cities = ref([])
+const states = ref([])
 
 const filters = ref({
   filter: '',
   type_id: null,
   shelter_id: null,
+  city_id: null,
+  state_id: null,
 })
 
 const fetch = () => {
@@ -28,6 +33,14 @@ const fetch = () => {
     page: currentPage.value,
     length: rowPerPage.value,
     ...filters.value,
+  }
+
+  if(filters.value.state_id){
+    getCities(filters.value.state_id).then(res => {
+      cities.value = res.data.data
+    })
+  } else {
+    cities.value = []
   }
 
   storePet.fetchPets(params).then(res => {
@@ -82,11 +95,22 @@ onMounted(() => {
   })
 
   storeShelter.fetchShelters().then(res => {
-    shelters.value = res.data.data.shelters
+    shelters.value = res.data.data.shelters.map(r => {
+      return { name: `${r.name} - ${r.address}, ${r.address_number} - ${r.city.name.toUpperCase()}`, id: r.id }
+    })
+  })
+
+  getStates().then(res => {
+    states.value = res.data.data
   })
 })
 
-watch([() => filters.value.type_id, () => filters.value.shelter_id], fetch)
+watch([
+  () => filters.value.type_id, 
+  () => filters.value.shelter_id,
+  () => filters.value.state_id,
+  () => filters.value.city_id,
+], fetch)
 </script>
 
 <template>
@@ -96,16 +120,6 @@ watch([() => filters.value.type_id, () => filters.value.shelter_id], fetch)
         <VRow>
           <VCol cols="6">
             <VAutocomplete 
-              v-model="filters.type_id"
-              :items="types"
-              label="Tipo"
-              item-title="name"
-              item-value="id"
-            />
-          </VCol>
-
-          <VCol cols="6">
-            <VAutocomplete 
               v-model="filters.shelter_id"
               :items="shelters"
               label="Abrigo"
@@ -113,11 +127,44 @@ watch([() => filters.value.type_id, () => filters.value.shelter_id], fetch)
               item-value="id"
             />
           </VCol>
+
+          <VCol cols="2">
+            <VAutocomplete 
+              v-model="filters.type_id"
+              :items="types"
+              label="Tipo"
+              item-title="name"
+              item-value="id"
+            />
+          </VCol>
+        
+          <VCol cols="2">
+            <VAutocomplete 
+              v-model="filters.state_id"
+              :items="states"
+              label="Estado"
+              item-title="name"
+              item-value="id"
+            />
+          </VCol>
+
+          <VCol cols="2">
+            <VAutocomplete 
+              v-model="filters.city_id"
+              :items="cities"
+              label="Cidade"
+              item-title="name"
+              item-value="id"
+            />
+          </VCol>
         </VRow>
       </VCardText>
     </VCard>
-    <PaginationComponent @changed="fetch" />
-    <VRow no-gutters>
+    <PaginationComponent 
+      v-if="pets.length" 
+      @changed="fetch" 
+    />
+    <VRow class="mt-4">
       <VCol 
         v-for="(pet, index) in pets"
         :key="index"
@@ -145,8 +192,18 @@ watch([() => filters.value.type_id, () => filters.value.shelter_id], fetch)
           </VCardText>
         </VCard>
       </VCol>
+      <VRow v-if="!pets.length">
+        <VAlert
+          class="text-center mt-3 mx-6"
+          color="error"
+          text="Não foi encontrado nenhum animal com esta configuração de filtros."
+        />
+      </VRow>
     </VRow>
-    <PaginationComponent @changed="fetch" />
+    <PaginationComponent
+      v-if="pets.length" 
+      @changed="fetch" 
+    />
     <HomeModal />
   </div>
 </template>

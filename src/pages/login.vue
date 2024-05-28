@@ -24,6 +24,7 @@ const refVForm = ref()
 const email = ref('vaghetticristian@gmail.com')
 const password = ref('Teste@123')
 const showLoginForm = ref(false)
+const loading = ref(false)
 
 const userAbilities = [
   {
@@ -37,6 +38,8 @@ const userAbilities = [
 ]
 
 const login = () => {
+  loading.value = true
+
   axios.post('/auth', {
     email: email.value,
     password: password.value,
@@ -55,6 +58,8 @@ const login = () => {
     router.replace(route.query.to ? String(route.query.to) : '/home')
   }).catch(e => {
     errors.value.email = e.response?.data?.msg || 'Ocorreu um erro inesperado!'
+  }).finally(() => {
+    loading.value = false
   })
 }
 
@@ -191,10 +196,18 @@ const giveGuestAbilities = () => {
 
                 <VBtn
                   block
-                  type="submit"
                   class="mb-1"
+                  :disabled="loading"
+                  @click="onSubmit"
                 >
-                  Entrar
+                  <VProgressCircular
+                    v-if="loading"
+                    indeterminate
+                    color="success"
+                    :size="30"
+                    :width="5"
+                  />
+                  <span v-if="!loading">Enviar</span>
                 </VBtn>
               </VCol>
 
