@@ -45,8 +45,7 @@ const props = defineProps({
           <VChip
             label
             variant="flat"
-            color="info"
-            density="compact"
+            color="primary"
             class="mt-4"
           >
             {{ props.userData.profile.name }}
