@@ -210,20 +210,21 @@ const giveGuestAbilities = () => {
                   <span v-if="!loading">Enviar</span>
                 </VBtn>
               </VCol>
-
               <!-- create account -->
-              <VCol
+              <!--
+                <VCol
                 cols="12"
                 class="text-center"
-              >
+                >
                 <span>Quero criar minha conta!</span>
                 <RouterLink
-                  class="text-primary ms-2"
-                  :to="{ name: 'register' }"
+                class="text-primary ms-2"
+                :to="{ name: 'register' }"
                 >
-                  Criar conta
+                Criar conta
                 </RouterLink>
-              </VCol>
+                </VCol>
+              -->
             </VRow>
           </VForm>
         </VCardText>

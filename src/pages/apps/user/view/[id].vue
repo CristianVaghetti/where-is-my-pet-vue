@@ -1,10 +1,10 @@
 <script setup>
-import { useUserListStore } from '@/views/apps/user/useUserStore'
+import { useUserStore } from '@/views/apps/user/useUserStore'
 import UserBioPanel from '@/views/apps/user/view/UserBioPanel.vue'
 import UserTabOverview from '@/views/apps/user/view/UserTabOverview.vue'
 import UserTabSecurity from '@/views/apps/user/view/UserTabSecurity.vue'
 
-const userListStore = useUserListStore()
+const userListStore = useUserStore()
 const route = useRoute()
 const userData = ref()
 const userTab = ref(null)

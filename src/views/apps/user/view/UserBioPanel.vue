@@ -1,7 +1,6 @@
 <script setup>
 import {
   avatarText,
-  kFormatter,
 } from '@core/utils/formatters'
 
 const props = defineProps({
@@ -10,57 +9,6 @@ const props = defineProps({
     required: true,
   },
 })
-
-const isUpgradePlanDialogVisible = ref(false)
-
-const resolveUserStatusVariant = stat => {
-  if (stat === '1')
-    return 'success'
-  if (stat === '0')
-    return 'secondary'
-  
-  return 'primary'
-}
-
-const resolveRoleName = role => {
-  if (role === "M")
-    return 'ADMIN'
-
-  return 'Zé ninguém'
-}
-
-const resolveUserRoleVariant = role => {
-  if (role === 'subscriber')
-    return {
-      color: 'primary',
-      icon: 'bx-user',
-    }
-  if (role === 'author')
-    return {
-      color: 'warning',
-      icon: 'bx-cog',
-    }
-  if (role === 'maintainer')
-    return {
-      color: 'success',
-      icon: 'bx-data',
-    }
-  if (role === 'editor')
-    return {
-      color: 'info',
-      icon: 'bx-pencil',
-    }
-  if (role === 'M')
-    return {
-      color: 'error',
-      icon: 'bx-server',
-    }
-  
-  return {
-    color: 'primary',
-    icon: 'bx-user',
-  }
-}
 </script>
 
 <template>
@@ -84,23 +32,24 @@ const resolveUserRoleVariant = role => {
               v-else
               class="text-5xl font-weight-semibold"
             >
-              {{ avatarText(props.userData.nome) }}
+              {{ avatarText(props.userData.name) }}
             </span>
           </VAvatar>
 
-          <!-- 👉 User nome -->
+          <!-- 👉 User name -->
           <h6 class="text-h6 mt-4">
-            {{ props.userData.nome }}
+            {{ props.userData.name }}
           </h6>
 
           <!-- 👉 Role chip -->
           <VChip
             label
-            :color="resolveUserRoleVariant(props.userData.tipo_usuario).color"
+            variant="flat"
+            color="info"
             density="compact"
             class="mt-4"
           >
-            {{ resolveRoleName(props.userData.tipo_usuario) }}
+            {{ props.userData.profile.name }}
           </VChip>
         </VCardText>
 
@@ -117,7 +66,7 @@ const resolveUserRoleVariant = role => {
               <VListItemTitle>
                 <span class="font-weight-medium me-1">Usuário:</span>
                 <span class="text-body-1 text-medium-emphasis">
-                  {{ props.userData.name }}
+                  {{ props.userData.username }}
                 </span>
               </VListItemTitle>
             </VListItem>
@@ -139,7 +88,8 @@ const resolveUserRoleVariant = role => {
                 <VChip
                   label
                   density="compact"
-                  :color="resolveUserStatusVariant(props.userData.status)"
+                  variant="flat"
+                  :color="props.userData.status ? 'success' : 'error'"
                 >
                   {{ props.userData.status ? 'ATIVO' : 'INATIVO' }}
                 </VChip>
@@ -149,7 +99,7 @@ const resolveUserRoleVariant = role => {
             <VListItem>
               <VListItemTitle>
                 <span class="font-weight-medium me-1">Perfil: </span>
-                <span class="text-capitalize text-body-1 text-medium-emphasis">{{ resolveRoleName(props.userData.tipo_usuario) }}</span>
+                <span class="text-capitalize text-body-1 text-medium-emphasis">{{ props.userData.profile.description }}</span>
               </VListItemTitle>
             </VListItem>
 

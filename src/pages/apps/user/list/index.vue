@@ -1,9 +1,9 @@
 <script setup>
 import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue'
-import { useUserListStore } from '@/views/apps/user/useUserListStore'
+import { useUserStore } from '@/views/apps/user/useUserStore'
 import { avatarText } from '@core/utils/formatters'
 
-const userListStore = useUserListStore()
+const userListStore = useUserStore()
 const searchQuery = ref('')
 const selectedRole = ref()
 const selectedPlan = ref()

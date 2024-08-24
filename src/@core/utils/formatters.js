@@ -26,7 +26,7 @@ export const formatDate = (value, formatting = { month: 'short', day: 'numeric',
   if (!value)
     return value
   
-  return new Intl.DateTimeFormat('en-US', formatting).format(new Date(value))
+  return new Intl.DateTimeFormat('pt-BR', formatting).format(new Date(value))
 }
 
 /**
@@ -41,5 +41,5 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
   if (toTimeForCurrentDay && isToday(date))
     formatting = { hour: 'numeric', minute: 'numeric' }
   
-  return new Intl.DateTimeFormat('en-US', formatting).format(new Date(value))
+  return new Intl.DateTimeFormat('pt-BR', formatting).format(new Date(value))
 }

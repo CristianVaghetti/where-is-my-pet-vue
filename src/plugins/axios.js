@@ -23,9 +23,12 @@ const checkRedirect = () => {
 
     localStorage.removeItem('accessToken')
     localStorage.setItem('lastActiveTime', Date.now())
-    router.push(`/login?sessionEnd=true&to=${last}`)
 
-    return Promise.reject()
+    if (last !== '/forgot-password' && last !== '/reset-password') {
+      router.push(`/login?sessionEnd=true&to=${last}`)
+
+      return Promise.reject()
+    }
   }
 }
 
@@ -51,8 +54,6 @@ axiosIns.interceptors.request.use(config => {
 })
 
 axiosIns.interceptors.response.use(response => {
-  checkRedirect()
-
   localStorage.setItem('lastActiveTime', Date.now())
 
   return response

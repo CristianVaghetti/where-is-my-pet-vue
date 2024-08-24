@@ -60,26 +60,6 @@ const handleShelterInfo = shelter => {
           </VCard>
 
           <VCard
-            v-if="pet.found"
-            class="mb-4"
-            variant="tonal"
-          >
-            <VCardTitle>
-              <p class="text-h4">
-                Informações do dono
-              </p>
-            </VCardTitle>
-            <VCardText
-              class="text-h6" 
-              style="color:chocolate"
-            >
-              <p>Nome do dono informado: {{ pet.owner_name }}</p><br>
-              <p>Contato: {{ pet.owner_phone }}</p><br>
-              <p>Email: {{ pet.owner_email }}</p>
-            </VCardText>
-          </VCard>
-
-          <VCard
             class="mb-4"
             variant="tonal"
           >
