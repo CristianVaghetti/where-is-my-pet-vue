@@ -11,6 +11,12 @@ const refForm = ref()
 const store = useUserStore()
 const route = useRoute()
 
+const alert = ref({
+  text: '',
+  type: '',
+  show: false,
+})
+
 const form = ref({
   password: '',
   new_password: '',
@@ -25,11 +31,22 @@ const onSubmit = () => {
   })
 }
 
+const alertContent = (type, text) => {
+  alert.value = {
+    show: true,
+    text: text,
+    type: type,
+  }
+}
+
 const change = () => {
   loading.value = true
   
   store.changePassword(Number(route.params.id), form.value).then(res => {
     disableBtn.value = true
+    alertContent('success', res.data.msg)
+  }).catch(e => {
+    alertContent('error', e.response.data.msg)
   }).finally(() => {
     loading.value = false
   })
@@ -37,6 +54,13 @@ const change = () => {
 </script>
 
 <template>
+  <VAlert
+    v-model="alert.show"
+    :type="alert.type"
+    :text="alert.text"
+    closable
+    class="mb-4"
+  />
   <VRow>
     <VCol cols="12">
       <!-- 👉 Change password -->
