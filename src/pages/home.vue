@@ -21,6 +21,7 @@ const cities = ref([])
 const states = ref([])
 
 const filters = ref({
+  home: true,
   filter: '',
   type_id: null,
   shelter_id: null,
@@ -94,7 +95,7 @@ onMounted(() => {
     types.value = res.data.data.types
   })
 
-  storeShelter.fetchShelters().then(res => {
+  storeShelter.fetchShelters({ home: true }).then(res => {
     shelters.value = res.data.data.shelters.map(r => {
       return { name: `${r.name} - ${r.address}, ${r.address_number} - ${r.city.name.toUpperCase()}`, id: r.id }
     })
