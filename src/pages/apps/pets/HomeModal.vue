@@ -73,10 +73,31 @@ const handleShelterInfo = shelter => {
               style="color:chocolate"
             >
               <p>Endereço: {{ handleShelterInfo(pet.shelter) }}</p>
-              <p>Responsável: {{ pet.shelter.responsible.name }}</p>
-              <p>Contato: {{ pet.shelter.responsible.phone }}</p>
             </VCardText>
           </VCard>
+
+          <VCard
+            class="mb-4"
+            variant="tonal"
+          >
+            <VCardTitle>
+              <p class="text-h4">
+                Responsáveis
+              </p>
+            </VCardTitle>
+
+            <VCardText
+              v-for="user in pet.shelter.users"
+              :key="user.id"
+              style="color:chocolate"
+              class="text-h6" 
+            >
+              <p>Responsável: {{ user.name }}</p>
+              <p>Contato: {{ user.phone }}</p>
+              <hr>
+            </VCardText>
+          </VCard>
+
           <VRow>
             <VCol class="d-flex">
               <VImg
