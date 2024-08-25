@@ -9,7 +9,7 @@ const store = useShelterStore()
 const isAddShelterDrawerVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
-const users = ref([])
+const loading = ref(true)
 
 const formEmpty = ref({
   name: '',
@@ -46,6 +46,8 @@ const paginationData = computed(() => {
 })
 
 const fetch = () => {
+  loading.value = true
+
   let params = {
     page: currentPage.value,
     length: rowPerPage.value,
@@ -56,14 +58,10 @@ const fetch = () => {
     shelters.value = res.data.data.shelters.items
     totalShelters.value = res.data.data.shelters.total
     totalPage.value =  Math.ceil(res.data.data.shelters.total / rowPerPage.value)
-  })
-
-  store.fetchUsers().then(res => {
-    users.value = res.data.data.users
+  }).finally(() => {
+    loading.value = false
   })
 }
-
-provide('users', users)
 
 const add = e => {
   store.addShelter(e).then(res => {
@@ -165,7 +163,16 @@ provide('paginationData', paginationData)
           </VBtn>
         </VCol>
       </VRow>
-      <VTable density="default">
+      
+      <VProgressLinear
+        v-if="loading"
+        class="my-4"
+        indeterminate
+        :height="6"
+        color="primary"
+      />
+
+      <VTable v-else>
         <thead>
           <tr>
             <th class="text-left">

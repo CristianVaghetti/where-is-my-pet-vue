@@ -11,6 +11,7 @@ const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
 const shelters = ref([])
 const petTypes = ref([])
+const loading = ref(true)
 
 const formEmpty = ref({
   personality: '',
@@ -45,6 +46,7 @@ const paginationData = computed(() => {
 })
 
 const fetch = () => {
+  loading.value = true
   let params = {
     page: currentPage.value,
     length: rowPerPage.value,
@@ -55,6 +57,8 @@ const fetch = () => {
     pets.value = res.data.data.pets.items
     totalPets.value = res.data.data.pets.total
     totalPage.value =  Math.ceil(res.data.data.pets.total / rowPerPage.value)
+  }).finally(() => {
+    loading.value = false
   })
 
   store.fetchShelters().then(res => {
@@ -169,7 +173,16 @@ provide('paginationData', paginationData)
           </VBtn>
         </VCol>
       </VRow>
-      <VTable density="default">
+
+      <VProgressLinear
+        v-if="loading"
+        class="my-4"
+        indeterminate
+        :height="6"
+        color="primary"
+      />
+
+      <VTable v-else>
         <thead>
           <tr>
             <th class="text-left">

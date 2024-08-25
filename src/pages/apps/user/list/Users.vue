@@ -10,6 +10,7 @@ const isAddUserDrawerVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
 const idToDestroy = ref(0)
 const profiles = ref([])
+const loading = ref(true)
 
 const formEmpty = ref({
   profile_id: null,
@@ -46,6 +47,8 @@ const paginationData = computed(() => {
 })
 
 const fetch = () => {
+  loading.value = true
+
   let params = {
     page: currentPage.value,
     length: rowPerPage.value,
@@ -56,6 +59,8 @@ const fetch = () => {
     users.value = res.data.data.users.items
     totalUsers.value = res.data.data.users.total
     totalPage.value =  Math.ceil(res.data.data.users.total / rowPerPage.value)
+  }).finally(() => {
+    loading.value = false
   })
 
   store.fetchProfiles().then(res => {
@@ -165,7 +170,16 @@ provide('paginationData', paginationData)
           </VBtn>
         </VCol>
       </VRow>
-      <VTable density="default">
+            
+      <VProgressLinear
+        v-if="loading"
+        class="my-4"
+        indeterminate
+        :height="6"
+        color="primary"
+      />
+
+      <VTable v-else>
         <thead>
           <tr>
             <th class="text-left">

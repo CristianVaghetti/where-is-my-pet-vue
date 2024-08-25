@@ -27,7 +27,6 @@ const emit = defineEmits([
 const refForm = ref()
 const cities = ref([])
 const states = ref([])
-const users = inject('users', [])
 
 // 👉 Form
 const form = ref(JSON.parse(JSON.stringify(props.form)))
@@ -154,17 +153,6 @@ getStates().then(res => {
                   v-maska:[maskUpper]
                   label="Apelido"
                   :rules="[requiredValidator]"
-                />
-              </VCol>
-
-              <VCol cols="12">
-                <VAutocomplete
-                  v-model="form.user_id"
-                  :items="users"
-                  label="Responsável"
-                  :rules="[requiredValidator]"
-                  item-title="name"
-                  item-value="id"
                 />
               </VCol>
 
