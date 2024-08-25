@@ -20,12 +20,13 @@ const props = defineProps({
           <!-- 👉 Avatar -->
           <VAvatar
             rounded
-            :size="120"
+            :size="300"
             color="primary"
             variant="tonal"
           >
             <VImg
               v-if="props.userData.avatar"
+              cover
               :src="props.userData.avatar"
             />
             <span
