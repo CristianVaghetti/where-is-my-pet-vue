@@ -77,5 +77,5 @@ userListStore.fetchUser(Number(route.params.id)).then(response => {
 <route lang="yaml">
 meta:
   action: read
-  subject: User
+  subject: users
 </route>

@@ -198,6 +198,7 @@ const handleFileChange = event => {
               <VCol cols="12">
                 <VTextField
                   v-model="form.email"
+                  :disabled="form.id"
                   label="Email"
                   :rules="[emailValidator, requiredValidator]"
                 />

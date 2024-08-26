@@ -46,6 +46,7 @@ const theme = {
         'snackbar-color': '#ffffff',
         'tooltip-background': '#262732',
         'tooltip-opacity': 0.9,
+        'disabled-opacity': 0.8,
 
         // Shadows
         'shadow-key-umbra-opacity': 'rgba(var(--v-theme-on-surface), 0.06)',
