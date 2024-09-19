@@ -11,7 +11,9 @@ export const useUserStore = defineStore('UserStore', {
 
     addUser(params) { return axios.post('/user', params) },
     
-    editUser(params) { return axios.put(`/user/${params.id}`, params) },
+    updateUser(params) { return axios.put(`/user/${params.id}`, params) },
+
+    removeUser(id) { return axios.delete(`/user/${id}`) },
 
     changePassword(id, params) { return axios.put(`/user/${id}/change-password`, params) },
   },

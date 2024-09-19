@@ -70,7 +70,7 @@ const add = e => {
 }
 
 const edit = e => {
-  store.editShelter(e).then(res => {
+  store.updateShelter(e).then(res => {
     fetch()
   })
 }

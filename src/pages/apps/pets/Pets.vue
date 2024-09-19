@@ -80,7 +80,7 @@ const add = e => {
 }
 
 const edit = e => {
-  store.editPet(e).then(res => {
+  store.updatePet(e).then(res => {
     fetch()
   })
 }

@@ -9,7 +9,7 @@ export const useShelterStore = defineStore('shelter', {
 
     async addShelter(params) { return axios.post('/shelter', params) },
 
-    async editShelter(params) { return axios.put(`/shelter/${params.id}`, params) },
+    async updateShelter(params) { return axios.put(`/shelter/${params.id}`, params) },
 
     async removeShelter(id) { return axios.delete(`/shelter/${id}`) },
   },

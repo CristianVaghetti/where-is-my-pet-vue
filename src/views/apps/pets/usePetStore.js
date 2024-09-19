@@ -11,7 +11,7 @@ export const usePetStore = defineStore('pet', {
 
     async addPet(params) { return axios.post('/pet', params) },
 
-    async editPet(params) { return axios.put(`/pet/${params.id}`, params) },
+    async updatePet(params) { return axios.put(`/pet/${params.id}`, params) },
 
     async removePet(id) { return axios.delete(`/pet/${id}`) },
   },

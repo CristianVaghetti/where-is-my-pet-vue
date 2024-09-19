@@ -77,7 +77,7 @@ const add = e => {
 }
 
 const edit = e => {
-  store.editUser(e).then(res => {
+  store.updateUser(e).then(res => {
     fetch()
   })
 }
